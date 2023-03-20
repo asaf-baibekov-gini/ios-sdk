@@ -23,9 +23,9 @@ internal struct AdMobParams: Hashable, APEAdParameters {
         
         guard
             let provider  = dictionary[Keys.adProvider] as? String,
-            let adUnitId  = dictionary[Keys.adUnitId  ] as? String,
-            let typeStr   = dictionary[Keys.adType    ] as? String,
-            let isVariant = dictionary[Keys.isVariant ] as? Bool,
+            let adUnitId  = dictionary[Keys.adUnitId] as? String,
+            let typeStr   = dictionary[Keys.adType] as? String,
+            let isVariant = dictionary[Keys.isVariant] as? Bool,
             let adType    = APEAdType(rawValue: typeStr),
             provider == Keys.adMob
         else { return nil }
