@@ -32,7 +32,7 @@ public class APEController: NSObject {
     }
     
     var lastDeviceOrientation: UIDeviceOrientation
-    let setDeviceOrientation : ((Int) -> Void)     = {
+    let setDeviceOrientation: ((Int) -> Void)     = {
         UIDevice.current.setValue($0, forKey: "orientation")
     }
 
@@ -42,9 +42,9 @@ public class APEController: NSObject {
     // MARK:- Private Properties
     private let environment: APEEnvironment!
 
-    var messageDispatcher : MessageDispatcher
+    var messageDispatcher: MessageDispatcher
 
-    var loadingState : LoadingState
+    var loadingState: LoadingState
 
     var subscribedEvents: Set<String>
 
@@ -54,7 +54,7 @@ public class APEController: NSObject {
     }
 
     /// The strip view visibility status, update this property either when the strip view is visible or not.
-    public var isDisplayed : Bool
+    public var isDisplayed: Bool
 
 
     init(_ environment: APEEnvironment) {
@@ -206,7 +206,7 @@ private extension APEController {
 
 // MARK: - UIAdaptivePresentationControllerDelegate
 @available(iOS 11.0, *)
-extension APEController : UIAdaptivePresentationControllerDelegate {
+extension APEController: UIAdaptivePresentationControllerDelegate {
     
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         self.hideStory()
@@ -215,7 +215,7 @@ extension APEController : UIAdaptivePresentationControllerDelegate {
 
 // MARK: - WKScriptMessageHandler
 @available(iOS 11.0, *)
-extension APEController : WKScriptMessageHandler {
+extension APEController: WKScriptMessageHandler {
     
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         DispatchQueue.main.async {
@@ -226,7 +226,7 @@ extension APEController : WKScriptMessageHandler {
 
 // MARK: - WKNavigationDelegate
 @available(iOS 11.0, *)
-extension APEController : WKNavigationDelegate {
+extension APEController: WKNavigationDelegate {
 
     public func webView(_ webView: WKWebView,
                         didReceive challenge: URLAuthenticationChallenge,
@@ -295,7 +295,7 @@ extension APEController: WKUIDelegate {
 
 // MARK: - UIScrollViewDelegate
 @available(iOS 11.0, *)
-extension APEController : UIScrollViewDelegate {
+extension APEController: UIScrollViewDelegate {
     
     public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
         scrollView.pinchGestureRecognizer?.isEnabled = false
