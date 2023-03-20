@@ -69,9 +69,7 @@ public class APEController: NSObject {
         // prefetch channel data...
         let name = UIDevice.orientationDidChangeNotification
         NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
-            
-            guard let strongSelf = self else { return }
-            strongSelf.orientationDidChangeNotification()
+            self?.orientationDidChangeNotification()
         }
     }
 
