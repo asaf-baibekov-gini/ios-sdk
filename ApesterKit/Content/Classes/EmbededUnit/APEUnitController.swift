@@ -260,81 +260,71 @@ extension APEUnitController
         
         let messageName = message.name
         
-        if messageName == Constants.Unit.proxy, message.webView?.hash == unitWebView.hash,
-           let bodyString = message.body as? String ,
-           let dictionary = bodyString.ape_dictionary
-        {
+        if messageName == Constants.Unit.proxy,
+           message.webView?.hash == unitWebView.hash,
+           let bodyString = message.body as? String,
+           let dictionary = bodyString.ape_dictionary {
+            
             if !loadingState.isLoaded {
                 loadingState.isLoaded = true
             }
             
-            if dictionary["type"] as? String == Constants.Unit.isReady
-            {
-                if !loadingState.isReady {
-                    loadingState.isReady = true
-                }
-            }
-            
-            if dictionary["type"] as? String == Constants.Unit.resize , let isFinalSize = dictionary["isFinalSizeForInApp"] as? Bool
-            {
-                let height = dictionary.ape_floatValue(for: Constants.Unit.height)
-                let width  = dictionary.ape_floatValue(for: Constants.Unit.width)
-                
-                if CGFloat(height) != self.loadingState.height {
-                    self.widgetHeight = height
-                    self.loadingState.height = CGFloat(height)
-                    self.update(height: height, width: width)
-                }
-                
-                if isFinalSize {
-                    self.widgetHeight = height
-                    self.updateFinalDisplay(with: height)
-                }
-            }
-            
-            if dictionary["type"] as? String == Constants.WebView.apesterAdsCompleted
-            {
-                delegate?.unitView(self, didCompleteAdsForUnit: self.identifier)
-            }
-            
-            if dictionary["type"] as? String == Constants.Monetization.initInUnit
-            {
-                print("||>>>> Payload: \(String(describing: dictionary))")
-                if let params = AdMobParams   (from: dictionary)
-                {
-                    setupAdMobView(params: params)
-                }
-                if let params = PubMaticParams(from: dictionary)
-                {
-                    setupPubMaticView(params: params)
-                }
-            }
-            
-            if dictionary["type"] as? String == Constants.Monetization.initNativeAd
-            {
-                print("||>>>> Payload: \(String(describing: dictionary))")
-                if let params = AdMobParams   (from: dictionary)
-                {
-                    setupAdMobView(params: params)
-                }
-                if let params = PubMaticParams(from: dictionary)
-                {
-                    setupPubMaticView(params: params)
-                }
-            }
-            
-            if dictionary["type"] as? String == Constants.Monetization.killInUnit
-            {
-                if let adTypeStr = bodyString.ape_dictionary?[Constants.Monetization.adType] as? String,
-                   let adType    = APEAdType(rawValue: adTypeStr) {
-                    removeAdView(of: adType)
-                }
-            }
-            
-            if dictionary.keys.contains(Constants.Unit.isReady) , (configuration.autoFullscreen.ape_isExist)
-            {
-                DispatchQueue.main.async {
+            if let type = dictionary["type"] as? String {
+                switch type {
+                case Constants.Unit.isReady:
+                    if !loadingState.isReady {
+                        loadingState.isReady = true
+                    }
                     
+                case Constants.Unit.resize:
+                    if let isFinalSize = dictionary["isFinalSizeForInApp"] as? Bool {
+                        let height = dictionary.ape_floatValue(for: Constants.Unit.height)
+                        let width  = dictionary.ape_floatValue(for: Constants.Unit.width)
+                        if CGFloat(height) != self.loadingState.height {
+                            self.widgetHeight = height
+                            self.loadingState.height = CGFloat(height)
+                            self.update(height: height, width: width)
+                        }
+                        if isFinalSize {
+                            self.widgetHeight = height
+                            self.updateFinalDisplay(with: height)
+                        }
+                    }
+                    
+                case Constants.WebView.apesterAdsCompleted:
+                    delegate?.unitView(self, didCompleteAdsForUnit: self.identifier)
+                    
+                case Constants.Monetization.initInUnit:
+                    print("||>>>> Payload: \(String(describing: dictionary))")
+                    if let params = AdMobParams(from: dictionary) {
+                        setupAdMobView(params: params)
+                    }
+                    if let params = PubMaticParams(from: dictionary) {
+                        setupPubMaticView(params: params)
+                    }
+                    
+                case Constants.Monetization.initNativeAd:
+                    print("||>>>> Payload: \(String(describing: dictionary))")
+                    if let params = AdMobParams(from: dictionary) {
+                        setupAdMobView(params: params)
+                    }
+                    if let params = PubMaticParams(from: dictionary) {
+                        setupPubMaticView(params: params)
+                    }
+                    
+                case Constants.Monetization.killInUnit:
+                    if let adTypeStr = bodyString.ape_dictionary?[Constants.Monetization.adType] as? String,
+                       let adType = APEAdType(rawValue: adTypeStr) {
+                        removeAdView(of: adType)
+                    }
+                    
+                default:
+                    break
+                }
+            }
+            
+            if dictionary.keys.contains(Constants.Unit.isReady), (configuration.autoFullscreen.ape_isExist) {
+                DispatchQueue.main.async {
                     self.viewAbilityAssignment()
                     if !self.isDisplayed {
                         self.stop()
