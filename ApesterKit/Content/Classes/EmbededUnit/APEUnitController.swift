@@ -294,16 +294,8 @@ extension APEUnitController
                 case Constants.WebView.apesterAdsCompleted:
                     delegate?.unitView(self, didCompleteAdsForUnit: self.identifier)
                     
-                case Constants.Monetization.initInUnit:
-                    print("||>>>> Payload: \(String(describing: dictionary))")
-                    if let params = AdMobParams(from: dictionary) {
-                        setupAdMobView(params: params)
-                    }
-                    if let params = PubMaticParams(from: dictionary) {
-                        setupPubMaticView(params: params)
-                    }
-                    
-                case Constants.Monetization.initNativeAd:
+                case Constants.Monetization.initInUnit,
+                     Constants.Monetization.initNativeAd:
                     print("||>>>> Payload: \(String(describing: dictionary))")
                     if let params = AdMobParams(from: dictionary) {
                         setupAdMobView(params: params)
