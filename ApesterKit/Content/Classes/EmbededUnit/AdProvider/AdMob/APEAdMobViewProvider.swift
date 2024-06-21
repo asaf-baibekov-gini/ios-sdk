@@ -49,30 +49,22 @@ extension APEUnitController {
             inUnitBackgroundColor   : configuration.adInUnitBackgroundColor,
             onAdRequestedCompletion    : { [weak self] in
 
-                guard let strongSelf = self else { return }
+                guard let self else { return }
                 let name = Constants.Monetization.playerMonImpressionPending
-                strongSelf.dispatchAdMobEvent(named: name, for: params, widget: true)
+                self.dispatchAdMobEvent(named: name, for: params, widget: true)
                 
                 APELoggerService.shared.info("gADView::loadAd() - adType:\(params.type), unitID: \(params.identifier)")
             },
             receiveAdSuccessCompletion : { [weak self] in
-
-                guard let strongSelf = self else { return }
-                let name = Constants.Monetization.playerMonImpression
-                strongSelf.dispatchAdMobEvent(named: name, for: params, widget: true)
-                strongSelf.manualPostActionResize()
+                self?.dispatchAdMobEvent(named: Constants.Monetization.playerMonImpression, for: params, widget: true)
+                self?.manualPostActionResize()
             },
             receiveAdErrorCompletion   : { [weak self] error in
-
-                guard let strongSelf = self else { return }
-                let name = Constants.Monetization.playerMonLoadingImpressionFailed
-                strongSelf.dispatchAdMobEvent(named: name, for: params, widget: true)
-                strongSelf.manualPostActionResize()
+                self?.dispatchAdMobEvent(named: Constants.Monetization.playerMonLoadingImpressionFailed, for: params, widget: true)
+                self?.manualPostActionResize()
             },
             onAdRemovalCompletion      : { [weak self] adsType in
-
-                guard let strongSelf = self else { return }
-                strongSelf.removeAdView(of: adsType.adType)
+                self?.removeAdView(of: adsType.adType)
             })
 
         /// Step 04. if viewProvider is not in cache, add it
@@ -82,14 +74,11 @@ extension APEUnitController {
 
         /// Step 05. Check if UnitView container has a containerViewController, A adViewProvider can be presented only if we have a valid container.
         guard containerViewController.ape_isExist else {
-            
-            let name = Constants.Monetization.playerMonLoadingImpressionFailed
-            dispatchAdMobEvent(named: name, for: params, widget: false)
+            dispatchAdMobEvent(named: Constants.Monetization.playerMonLoadingImpressionFailed, for: params, widget: false)
             return
         }
         /// Step 06. - try to show GADView
         guard display(banner: viewProvider) else { return }
-
         /// Step 07. Send analytics event if GADView was shown
         dispatchAdMobEvent(named: Constants.Monetization.playerMonLoadingPass, for: params, widget: true)
     }

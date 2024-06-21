@@ -7,8 +7,7 @@
 
 import Foundation
 
-enum APEAdType : String , CustomStringConvertible
-{
+enum APEAdType: String, CustomStringConvertible {
     case bottom    = "bottom"
     case inUnit    = "inUnit"
     case companion = "companion"

@@ -51,30 +51,21 @@ extension APEUnitController {
             adTitleLabelText        : configuration.adTitleLabelText,
             inUnitBackgroundColor   : configuration.adInUnitBackgroundColor,
             onAdRemovalCompletion      : { [weak self] adsType in
-                
-                guard let strongSelf = self else { return }
-                strongSelf.removeAdView(of: adsType.adType)
+                self?.removeAdView(of: adsType.adType)
             },
             onAdRequestedCompletion    : { [weak self] in
-                
-                guard let strongSelf = self else { return }
+                guard let self else { return }
                 let name = Constants.Monetization.playerMonImpressionPending
-                strongSelf.dispatchPubmaticEvent(named: name, for: params, widget: true)
+                self.dispatchPubmaticEvent(named: name, for: params, widget: true)
                 APELoggerService.shared.info("pubMaticView::loadAd() - adType:\(params.type), unitID: \(params.identifier)")
             },
             receiveAdSuccessCompletion : { [weak self] in
-                
-                guard let strongSelf = self else { return }
-                let name = Constants.Monetization.playerMonImpression
-                strongSelf.dispatchPubmaticEvent(named: name, for: params, widget: true)
-                strongSelf.manualPostActionResize()
+                self?.dispatchPubmaticEvent(named: Constants.Monetization.playerMonImpression, for: params, widget: true)
+                self?.manualPostActionResize()
             },
             receiveAdErrorCompletion   : { [weak self] error in
-                
-                guard let strongSelf = self else { return }
-                let name = Constants.Monetization.playerMonLoadingImpressionFailed
-                strongSelf.dispatchPubmaticEvent(named: name, for: params, widget: true)
-                strongSelf.manualPostActionResize()
+                self?.dispatchPubmaticEvent(named: Constants.Monetization.playerMonLoadingImpressionFailed, for: params, widget: true)
+                self?.manualPostActionResize()
             })
         
         /// Step 04. if viewProvider is not in cache, add it

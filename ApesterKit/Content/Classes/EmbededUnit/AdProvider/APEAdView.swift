@@ -96,14 +96,10 @@ internal class APEAdView : UIView
         super.init(frame: .zero)
         self.backgroundColor    = .clear
         self.onReceiveAdSuccess = { [weak self] in
-            
-            guard let strongSelf = self else { return }
-            strongSelf.onAdSuccessAction()
+            self?.onAdSuccessAction()
         }
         self.onReceiveAdError   = { [weak self] mistake in
-            
-            guard let strongSelf = self else { return }
-            strongSelf.onAdErrorAction(mistake)
+            self?.onAdErrorAction(mistake)
         }
     }
 
@@ -191,9 +187,8 @@ internal class APEAdView : UIView
         // guard let inDisplay = timeInDisplay , refreshTimer == nil else { return }
         //
         // refreshTimer = Timer.scheduledTimer(withTimeInterval: Double(inDisplay), repeats: false, block: { [weak self] timer in
-        //
-        //     guard let strongSelf = self else { return }
-        //     strongSelf.onAdRemovalCompletion?(strongSelf.monetization)
+        //     guard let self else { return }
+        //     self.onAdRemovalCompletion?(self.monetization)
         // })
     }
     private func onAdErrorAction(_ error: Error?) {
